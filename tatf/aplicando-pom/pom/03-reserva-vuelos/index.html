@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cielo Austral · Reservas</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="bar" data-testid="header">
+    <span class="logo">Cielo Austral</span>
+    <nav class="progress" aria-label="Progreso de la reserva" data-testid="booking-progress">
+      <span class="p-step active" data-step="search" data-testid="progress-search">Búsqueda</span>
+      <span class="p-step" data-step="results" data-testid="progress-results">Vuelos</span>
+      <span class="p-step" data-step="seats" data-testid="progress-seats">Asientos</span>
+      <span class="p-step" data-step="passengers" data-testid="progress-passengers">Pasajeros</span>
+      <span class="p-step" data-step="done" data-testid="progress-done">Listo</span>
+    </nav>
+  </header>
+
+  <!-- ============ PASO 1: BÚSQUEDA ============ -->
+  <section class="page active" id="page-search" data-testid="search-page">
+    <h1>¿A dónde vas?</h1>
+    <form id="searchForm" class="search-card" novalidate data-testid="search-form">
+      <div class="trip-type" role="radiogroup" data-testid="trip-type">
+        <label><input type="radio" name="trip" value="ida" data-testid="trip-oneway"> Solo ida</label>
+        <label><input type="radio" name="trip" value="idavuelta" data-testid="trip-roundtrip" checked> Ida y vuelta</label>
+      </div>
+      <div class="fields">
+        <label>Origen
+          <select id="origin" data-testid="origin-select"></select>
+        </label>
+        <button type="button" class="swap" id="swapBtn" data-testid="swap-cities" aria-label="Intercambiar origen y destino">⇄</button>
+        <label>Destino
+          <select id="destination" data-testid="destination-select"></select>
+        </label>
+        <label>Salida
+          <input type="date" id="departDate" data-testid="depart-date">
+        </label>
+        <label id="returnWrap">Regreso
+          <input type="date" id="returnDate" data-testid="return-date">
+        </label>
+        <div class="pax" data-testid="passenger-counter">
+          <span>Pasajeros</span>
+          <div>
+            <button type="button" id="paxMinus" data-testid="pax-minus" aria-label="Quitar pasajero">−</button>
+            <output id="paxCount" data-testid="pax-count">1</output>
+            <button type="button" id="paxPlus" data-testid="pax-plus" aria-label="Agregar pasajero">+</button>
+          </div>
+        </div>
+        <label>Clase
+          <select id="cabin" data-testid="cabin-select">
+            <option value="economy">Económica</option>
+            <option value="premium">Premium</option>
+            <option value="business">Ejecutiva</option>
+          </select>
+        </label>
+      </div>
+      <ul class="errors" id="searchErrors" data-testid="search-errors"></ul>
+      <button type="submit" class="cta" data-testid="search-submit">Buscar vuelos</button>
+    </form>
+  </section>
+
+  <!-- ============ PASO 2: RESULTADOS ============ -->
+  <section class="page" id="page-results" data-testid="results-page">
+    <div class="page-head">
+      <button class="back" data-back="search" data-testid="back-to-search">Modificar búsqueda</button>
+      <h1 id="routeTitle" data-testid="route-title"></h1>
+    </div>
+    <div class="results-layout">
+      <aside class="side" data-testid="results-filters">
+        <h2>Escalas</h2>
+        <label><input type="checkbox" class="stops-filter" value="0" checked data-testid="stops-0"> Directo</label>
+        <label><input type="checkbox" class="stops-filter" value="1" checked data-testid="stops-1"> 1 escala</label>
+        <label><input type="checkbox" class="stops-filter" value="2" checked data-testid="stops-2"> 2 escalas</label>
+        <h2>Aerolínea</h2>
+        <select id="airlineFilter" data-testid="airline-filter">
+          <option value="">Todas</option>
+        </select>
+        <h2>Ordenar</h2>
+        <select id="sortFlights" data-testid="sort-flights">
+          <option value="price">Menor precio</option>
+          <option value="duration">Menor duración</option>
+          <option value="departure">Salida más temprana</option>
+        </select>
+      </aside>
+      <div>
+        <div class="loading" id="flightsLoading" data-testid="flights-loading">Buscando los mejores vuelos…</div>
+        <p id="flightsCount" class="muted" data-testid="flights-count"></p>
+        <ul class="flights" id="flightsList" data-testid="flights-list"></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PASO 3: ASIENTOS ============ -->
+  <section class="page" id="page-seats" data-testid="seats-page">
+    <div class="page-head">
+      <button class="back" data-back="results" data-testid="back-to-results">Cambiar vuelo</button>
+      <h1>Elegí tus asientos</h1>
+    </div>
+    <p class="muted" id="seatHint" data-testid="seat-hint"></p>
+    <div class="seats-layout">
+      <div class="plane" data-testid="seat-map">
+        <div class="legend">
+          <span><i class="swatch free"></i> Libre</span>
+          <span><i class="swatch taken"></i> Ocupado</span>
+          <span><i class="swatch mine"></i> Tu selección</span>
+          <span><i class="swatch exit"></i> Salida de emergencia (+$40)</span>
+        </div>
+        <div class="seat-grid" id="seatGrid"></div>
+      </div>
+      <aside class="side" data-testid="seat-summary">
+        <h2>Seleccionados</h2>
+        <ul id="selectedSeats" data-testid="selected-seats"></ul>
+        <p>Cargo por asientos: <strong id="seatFee" data-testid="seat-fee">$0</strong></p>
+        <button class="cta" id="seatsContinue" data-testid="seats-continue" disabled>Continuar</button>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ============ PASO 4: PASAJEROS ============ -->
+  <section class="page" id="page-passengers" data-testid="passengers-page">
+    <div class="page-head">
+      <button class="back" data-back="seats" data-testid="back-to-seats">Volver a asientos</button>
+      <h1>Datos de los pasajeros</h1>
+    </div>
+    <form id="paxForm" novalidate data-testid="passengers-form">
+      <div id="paxForms"></div>
+      <fieldset class="contact" data-testid="contact-section">
+        <legend>Contacto</legend>
+        <label>Email <input type="email" id="contactEmail" data-testid="contact-email"></label>
+        <span class="err" data-testid="contact-email-error"></span>
+        <label>Confirmar email <input type="email" id="contactEmail2" data-testid="contact-email-confirm"></label>
+        <span class="err" data-testid="contact-email-confirm-error"></span>
+      </fieldset>
+      <div class="total-bar" data-testid="price-breakdown">
+        <span>Pasajes: <b id="ticketsTotal" data-testid="tickets-total"></b></span>
+        <span>Asientos: <b id="seatsTotal" data-testid="seats-total"></b></span>
+        <span>Total: <b id="grandTotal" data-testid="grand-total"></b></span>
+      </div>
+      <button type="submit" class="cta" data-testid="confirm-booking">Confirmar reserva</button>
+    </form>
+  </section>
+
+  <!-- ============ PASO 5: CONFIRMACIÓN ============ -->
+  <section class="page" id="page-done" data-testid="confirmation-page">
+    <div class="ticket" data-testid="ticket">
+      <h1>¡Reserva confirmada!</h1>
+      <p>Código de reserva</p>
+      <p class="code" id="bookingCode" data-testid="booking-code"></p>
+      <dl id="ticketDetails" data-testid="ticket-details"></dl>
+      <button class="cta" id="newSearch" data-testid="new-search">Nueva búsqueda</button>
+    </div>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Banco Rambla · Home banking</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- ================= PANTALLA: LOGIN ================= -->
+  <section id="loginScreen" class="screen active" data-testid="login-page">
+    <div class="login-art" aria-hidden="true">
+      <p class="art-name">Banco Rambla</p>
+      <p class="art-tag">Tu banca en línea, sin filas.</p>
+    </div>
+    <form class="login-box" id="loginForm" novalidate data-testid="login-form">
+      <h1>Ingresá a tu cuenta</h1>
+      <label>Tipo de documento
+        <select id="docType" data-testid="login-doc-type">
+          <option value="ci">Cédula de identidad</option>
+          <option value="pas">Pasaporte</option>
+        </select>
+      </label>
+      <label>Número de documento
+        <input id="docNumber" inputmode="numeric" autocomplete="username" data-testid="login-doc-number">
+      </label>
+      <label>Contraseña
+        <span class="pw">
+          <input id="password" type="password" autocomplete="current-password" data-testid="login-password">
+          <button type="button" id="togglePw" data-testid="login-toggle-password" aria-label="Mostrar contraseña">Ver</button>
+        </span>
+      </label>
+      <label class="check"><input type="checkbox" id="remember" data-testid="login-remember"> Recordar mi documento</label>
+      <p class="alert hidden" id="loginError" role="alert" data-testid="login-error"></p>
+      <button type="submit" class="btn" id="loginBtn" data-testid="login-submit">Ingresar</button>
+      <p class="hint">Usuario de prueba: CI <b>12345678</b> · clave <b>Rambla2026</b></p>
+    </form>
+  </section>
+
+  <!-- ================= PANTALLA: APP ================= -->
+  <section id="appScreen" class="screen" data-testid="app-page">
+    <header class="app-head" data-testid="app-header">
+      <span class="app-logo">Banco Rambla</span>
+      <span id="welcome" data-testid="welcome-message"></span>
+      <span class="session" data-testid="session-timer">Sesión: <b id="sessionTime">05:00</b></span>
+      <button class="btn-line" id="logoutBtn" data-testid="logout-btn">Cerrar sesión</button>
+    </header>
+
+    <nav class="tabs" role="tablist" data-testid="main-tabs">
+      <button role="tab" class="tab active" data-tab="accounts" data-testid="tab-accounts" aria-selected="true">Mis cuentas</button>
+      <button role="tab" class="tab" data-tab="transfer" data-testid="tab-transfer" aria-selected="false">Transferir</button>
+      <button role="tab" class="tab" data-tab="history" data-testid="tab-history" aria-selected="false">Movimientos</button>
+    </nav>
+
+    <!-- -------- Tab: cuentas -------- -->
+    <div class="panel active" id="panel-accounts" role="tabpanel" data-testid="accounts-panel">
+      <div class="panel-head">
+        <h2>Mis cuentas</h2>
+        <button class="btn-line" id="toggleBalances" data-testid="toggle-balances">Ocultar saldos</button>
+      </div>
+      <div class="accounts" id="accountsList" data-testid="accounts-list"></div>
+    </div>
+
+    <!-- -------- Tab: transferir -------- -->
+    <div class="panel" id="panel-transfer" role="tabpanel" data-testid="transfer-panel">
+      <h2>Nueva transferencia</h2>
+      <form id="transferForm" class="transfer" novalidate data-testid="transfer-form">
+        <label>Cuenta de origen
+          <select id="fromAccount" data-testid="transfer-from"></select>
+        </label>
+        <span class="err" id="errFrom" data-testid="transfer-from-error"></span>
+
+        <fieldset class="dest-type" data-testid="transfer-destination-type">
+          <legend>Destino</legend>
+          <label><input type="radio" name="destType" value="own" data-testid="dest-own" checked> Cuenta propia</label>
+          <label><input type="radio" name="destType" value="contact" data-testid="dest-contact"> Contacto guardado</label>
+          <label><input type="radio" name="destType" value="new" data-testid="dest-new"> Otra cuenta</label>
+        </fieldset>
+
+        <label id="toOwnWrap">Cuenta destino
+          <select id="toOwn" data-testid="transfer-to-own"></select>
+        </label>
+        <label id="toContactWrap" class="hidden">Contacto
+          <select id="toContact" data-testid="transfer-to-contact"></select>
+        </label>
+        <div id="toNewWrap" class="hidden">
+          <label>Número de cuenta (10 dígitos)
+            <input id="toNew" inputmode="numeric" maxlength="10" data-testid="transfer-to-new">
+          </label>
+          <label>Titular
+            <input id="toNewName" data-testid="transfer-to-new-name">
+          </label>
+          <label class="check"><input type="checkbox" id="saveContact" data-testid="transfer-save-contact"> Guardar como contacto</label>
+        </div>
+        <span class="err" id="errTo" data-testid="transfer-to-error"></span>
+
+        <div class="two">
+          <label>Importe
+            <input id="amount" inputmode="decimal" data-testid="transfer-amount" placeholder="0,00">
+          </label>
+          <label>Moneda
+            <input id="currency" readonly data-testid="transfer-currency">
+          </label>
+        </div>
+        <span class="err" id="errAmount" data-testid="transfer-amount-error"></span>
+
+        <label>Concepto
+          <input id="concept" maxlength="40" data-testid="transfer-concept">
+        </label>
+        <span class="err" id="errConcept" data-testid="transfer-concept-error"></span>
+
+        <button type="submit" class="btn" data-testid="transfer-continue">Continuar</button>
+      </form>
+    </div>
+
+    <!-- -------- Tab: movimientos -------- -->
+    <div class="panel" id="panel-history" role="tabpanel" data-testid="history-panel">
+      <h2>Movimientos</h2>
+      <div class="hist-filters" data-testid="history-filters">
+        <label>Cuenta <select id="histAccount" data-testid="history-account"></select></label>
+        <label>Tipo
+          <select id="histType" data-testid="history-type">
+            <option value="">Todos</option>
+            <option value="credito">Créditos</option>
+            <option value="debito">Débitos</option>
+          </select>
+        </label>
+        <label>Desde <input type="date" id="histFrom" data-testid="history-from"></label>
+        <label>Hasta <input type="date" id="histTo" data-testid="history-to"></label>
+        <label>Buscar <input type="search" id="histSearch" data-testid="history-search" placeholder="Descripción"></label>
+      </div>
+      <div class="table-wrap">
+        <table data-testid="history-table">
+          <thead>
+            <tr><th>Fecha</th><th>Descripción</th><th>Cuenta</th><th class="num">Importe</th><th class="num">Saldo</th></tr>
+          </thead>
+          <tbody id="histBody" data-testid="history-rows"></tbody>
+        </table>
+      </div>
+      <p class="empty hidden" id="histEmpty" data-testid="history-empty">No hay movimientos para esos filtros.</p>
+      <div class="pager" data-testid="history-pagination">
+        <button class="btn-line" id="prevPage" data-testid="page-prev">Anterior</button>
+        <span id="pageInfo" data-testid="page-info"></span>
+        <button class="btn-line" id="nextPage" data-testid="page-next">Siguiente</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MODAL: CONFIRMAR TRANSFERENCIA ============ -->
+  <dialog id="confirmTransfer" data-testid="transfer-confirm-dialog">
+    <h2>Confirmá la transferencia</h2>
+    <dl id="confirmDetails" data-testid="transfer-confirm-details"></dl>
+    <label>Código del token (6 dígitos)
+      <input id="tokenInput" inputmode="numeric" maxlength="6" data-testid="token-input">
+    </label>
+    <p class="hint">Token de prueba: <b>246810</b></p>
+    <span class="err" id="errToken" data-testid="token-error"></span>
+    <div class="dialog-actions">
+      <button class="btn-line" id="cancelTransfer" data-testid="transfer-cancel">Cancelar</button>
+      <button class="btn" id="doTransfer" data-testid="transfer-confirm">Transferir</button>
+    </div>
+  </dialog>
+
+  <!-- ============ MODAL: RESULTADO ============ -->
+  <dialog id="resultDialog" data-testid="transfer-result-dialog">
+    <h2 id="resultTitle" data-testid="transfer-result-title"></h2>
+    <p id="resultText" data-testid="transfer-result-text"></p>
+    <div class="dialog-actions">
+      <button class="btn" id="resultOk" data-testid="transfer-result-ok">Aceptar</button>
+    </div>
+  </dialog>
+
+  <!-- ============ MODAL: SESIÓN POR VENCER ============ -->
+  <dialog id="sessionDialog" data-testid="session-dialog">
+    <h2>Tu sesión está por vencer</h2>
+    <p>Por seguridad se cerrará en <b id="sessionCountdown" data-testid="session-countdown">30</b> segundos.</p>
+    <div class="dialog-actions">
+      <button class="btn-line" id="sessionLogout" data-testid="session-logout">Salir</button>
+      <button class="btn" id="sessionExtend" data-testid="session-extend">Seguir conectado</button>
+    </div>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>

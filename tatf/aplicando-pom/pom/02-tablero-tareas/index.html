@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pizarra · Tablero de tareas</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="top" data-testid="board-header">
+    <div>
+      <h1>Pizarra</h1>
+      <p class="sub" id="boardStats" data-testid="board-stats"></p>
+    </div>
+    <button class="btn-primary" id="newTaskBtn" data-testid="new-task-btn">Nueva tarea</button>
+  </header>
+
+  <section class="toolbar" data-testid="toolbar">
+    <input type="search" id="filterText" placeholder="Buscar por título o etiqueta" data-testid="filter-search">
+    <select id="filterPriority" data-testid="filter-priority">
+      <option value="">Todas las prioridades</option>
+      <option value="alta">Alta</option>
+      <option value="media">Media</option>
+      <option value="baja">Baja</option>
+    </select>
+    <select id="filterAssignee" data-testid="filter-assignee">
+      <option value="">Todos los responsables</option>
+    </select>
+    <label class="toggle"><input type="checkbox" id="filterOverdue" data-testid="filter-overdue"> Solo vencidas</label>
+    <button class="btn-ghost" id="resetFilters" data-testid="reset-filters">Quitar filtros</button>
+  </section>
+
+  <main class="board" data-testid="board">
+    <section class="column" data-status="pendiente" data-testid="column-pendiente">
+      <h2>Pendiente <span class="count" data-testid="count-pendiente">0</span></h2>
+      <ul class="cards" data-testid="cards-pendiente"></ul>
+    </section>
+    <section class="column" data-status="progreso" data-testid="column-progreso">
+      <h2>En progreso <span class="count" data-testid="count-progreso">0</span></h2>
+      <ul class="cards" data-testid="cards-progreso"></ul>
+    </section>
+    <section class="column" data-status="hecha" data-testid="column-hecha">
+      <h2>Hecha <span class="count" data-testid="count-hecha">0</span></h2>
+      <ul class="cards" data-testid="cards-hecha"></ul>
+    </section>
+  </main>
+
+  <!-- Modal crear / editar -->
+  <dialog id="taskDialog" data-testid="task-dialog">
+    <form id="taskForm" method="dialog" novalidate data-testid="task-form">
+      <h2 id="dialogTitle" data-testid="task-dialog-title">Nueva tarea</h2>
+      <input type="hidden" id="taskId">
+
+      <label>Título *
+        <input id="taskTitle" maxlength="60" data-testid="task-title-input">
+      </label>
+      <small class="hint"><span id="titleCounter" data-testid="title-counter">0</span>/60</small>
+      <span class="err" id="errTitle" data-testid="task-title-error"></span>
+
+      <label>Descripción
+        <textarea id="taskDesc" rows="3" data-testid="task-desc-input"></textarea>
+      </label>
+
+      <fieldset class="prio" data-testid="task-priority-group">
+        <legend>Prioridad *</legend>
+        <label><input type="radio" name="priority" value="alta" data-testid="priority-alta"> Alta</label>
+        <label><input type="radio" name="priority" value="media" data-testid="priority-media" checked> Media</label>
+        <label><input type="radio" name="priority" value="baja" data-testid="priority-baja"> Baja</label>
+      </fieldset>
+
+      <div class="two">
+        <label>Responsable *
+          <select id="taskAssignee" data-testid="task-assignee-select"></select>
+        </label>
+        <label>Vence el *
+          <input type="date" id="taskDue" data-testid="task-due-input">
+        </label>
+      </div>
+      <span class="err" id="errAssignee" data-testid="task-assignee-error"></span>
+      <span class="err" id="errDue" data-testid="task-due-error"></span>
+
+      <fieldset class="tags" data-testid="task-tags-group">
+        <legend>Etiquetas</legend>
+        <label><input type="checkbox" value="frontend" data-testid="tag-frontend"> frontend</label>
+        <label><input type="checkbox" value="backend" data-testid="tag-backend"> backend</label>
+        <label><input type="checkbox" value="bug" data-testid="tag-bug"> bug</label>
+        <label><input type="checkbox" value="docs" data-testid="tag-docs"> docs</label>
+        <label><input type="checkbox" value="testing" data-testid="tag-testing"> testing</label>
+      </fieldset>
+
+      <div class="dialog-actions">
+        <button type="button" class="btn-ghost" id="cancelTask" data-testid="task-cancel-btn">Cancelar</button>
+        <button type="submit" class="btn-primary" id="saveTask" data-testid="task-save-btn">Crear tarea</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Confirmación de borrado -->
+  <dialog id="confirmDialog" data-testid="confirm-dialog">
+    <p id="confirmText" data-testid="confirm-text"></p>
+    <div class="dialog-actions">
+      <button class="btn-ghost" id="confirmNo" data-testid="confirm-cancel">Cancelar</button>
+      <button class="btn-danger" id="confirmYes" data-testid="confirm-delete">Eliminar</button>
+    </div>
+  </dialog>
+
+  <div class="toasts" id="toasts" aria-live="polite" data-testid="toast-container"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

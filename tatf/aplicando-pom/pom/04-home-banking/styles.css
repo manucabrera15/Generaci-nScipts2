@@ -1,0 +1,99 @@
+:root {
+  --bordo: #7a1f3d;
+  --bordo-dark: #5c1530;
+  --sand: #f5efe9;
+  --ink: #2b2226;
+  --muted: #7c6f74;
+  --line: #e4d8d0;
+  --green: #1b7f4b;
+  --red: #b3261e;
+  font-family: Georgia, "Times New Roman", serif;
+  color: var(--ink);
+  background: var(--sand);
+}
+* { box-sizing: border-box; }
+body { margin: 0; }
+button, input, select { font-family: "Segoe UI", Tahoma, sans-serif; font-size: 1rem; }
+button { cursor: pointer; }
+input, select { padding: .6rem; border: 1px solid var(--line); border-radius: 2px; background: #fff; width: 100%; color: var(--ink); }
+:focus-visible { outline: 3px solid #d9a441; outline-offset: 2px; }
+.hidden { display: none !important; }
+.screen { display: none; min-height: 100vh; }
+.screen.active { display: block; }
+#loginScreen.active { display: grid; grid-template-columns: 1.1fr 1fr; }
+
+.login-art { background: var(--bordo); color: #fff; display: flex; flex-direction: column; justify-content: flex-end; padding: 3rem; }
+.art-name { font-size: clamp(2.5rem, 6vw, 4.5rem); margin: 0; line-height: 1; }
+.art-tag { font-style: italic; opacity: .85; font-size: 1.2rem; }
+.login-box { align-self: center; justify-self: center; width: min(380px, 90%); display: flex; flex-direction: column; gap: .9rem; }
+.login-box h1 { font-weight: 400; margin: 0 0 .5rem; }
+.login-box label { display: flex; flex-direction: column; gap: .3rem; font-family: "Segoe UI", sans-serif; font-size: .9rem; }
+.pw { display: flex; }
+.pw input { border-right: 0; }
+.pw button { border: 1px solid var(--line); background: #fff; padding: 0 .8rem; }
+.check { flex-direction: row !important; align-items: center; gap: .5rem !important; }
+.check input { width: auto; }
+.alert { background: #fbe9e7; border-left: 4px solid var(--red); padding: .6rem .8rem; margin: 0; font-family: "Segoe UI", sans-serif; font-size: .9rem; }
+.hint { font-family: "Segoe UI", sans-serif; font-size: .8rem; color: var(--muted); }
+.btn { background: var(--bordo); color: #fff; border: 0; padding: .7rem 1.2rem; border-radius: 2px; }
+.btn:hover { background: var(--bordo-dark); }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.btn-line { background: transparent; border: 1px solid var(--bordo); color: var(--bordo); padding: .5rem 1rem; border-radius: 2px; }
+.btn-line:disabled { opacity: .4; cursor: not-allowed; }
+
+.app-head { display: flex; align-items: center; gap: 1.5rem; padding: 1rem 2rem; background: #fff; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+.app-logo { font-size: 1.4rem; color: var(--bordo); margin-right: auto; }
+.session { font-family: "Segoe UI", sans-serif; font-size: .85rem; color: var(--muted); }
+.tabs { display: flex; gap: 0; padding: 0 2rem; background: #fff; border-bottom: 1px solid var(--line); }
+.tab { background: none; border: 0; padding: 1rem 1.25rem; border-bottom: 3px solid transparent; color: var(--muted); }
+.tab.active { color: var(--bordo); border-bottom-color: var(--bordo); }
+.panel { display: none; padding: 2rem; max-width: 1100px; margin: 0 auto; }
+.panel.active { display: block; }
+.panel h2 { font-weight: 400; font-size: 1.7rem; margin-top: 0; }
+.panel-head { display: flex; justify-content: space-between; align-items: center; }
+
+.accounts { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }
+.account { background: #fff; border: 1px solid var(--line); padding: 1.25rem; border-top: 5px solid var(--bordo); }
+.account.usd { border-top-color: #3a5a78; }
+.account .type { font-family: "Segoe UI", sans-serif; color: var(--muted); font-size: .85rem; }
+.account .number { font-family: "Courier New", monospace; }
+.account .balance { font-size: 2rem; margin: .8rem 0 .2rem; }
+.account .actions { display: flex; gap: .5rem; margin-top: 1rem; }
+
+.transfer { max-width: 520px; display: flex; flex-direction: column; gap: .35rem; }
+.transfer label { display: flex; flex-direction: column; gap: .3rem; font-family: "Segoe UI", sans-serif; font-size: .9rem; margin-top: .5rem; }
+.dest-type { border: 1px solid var(--line); display: flex; gap: 1rem; flex-wrap: wrap; margin-top: .8rem; font-family: "Segoe UI", sans-serif; }
+.dest-type label { flex-direction: row; align-items: center; margin: 0; }
+.dest-type input { width: auto; }
+.two { display: grid; grid-template-columns: 2fr 1fr; gap: 1rem; }
+.err { color: var(--red); font-family: "Segoe UI", sans-serif; font-size: .82rem; min-height: .9rem; }
+.invalid { border-color: var(--red); }
+.transfer .btn { margin-top: 1rem; align-self: flex-start; }
+
+.hist-filters { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: .8rem; margin-bottom: 1rem; }
+.hist-filters label { display: flex; flex-direction: column; gap: .3rem; font-family: "Segoe UI", sans-serif; font-size: .85rem; }
+.table-wrap { overflow-x: auto; background: #fff; border: 1px solid var(--line); }
+table { width: 100%; border-collapse: collapse; font-family: "Segoe UI", sans-serif; font-size: .92rem; }
+th, td { padding: .65rem .8rem; text-align: left; border-bottom: 1px solid var(--line); white-space: nowrap; }
+th { background: #faf6f2; font-weight: 600; }
+.num { text-align: right; }
+.credit { color: var(--green); }
+.debit { color: var(--red); }
+.empty { text-align: center; color: var(--muted); padding: 1.5rem; }
+.pager { display: flex; justify-content: center; align-items: center; gap: 1rem; margin-top: 1rem; font-family: "Segoe UI", sans-serif; }
+
+dialog { border: 0; border-top: 6px solid var(--bordo); padding: 1.75rem; width: min(440px, 92vw); }
+dialog::backdrop { background: rgba(43, 34, 38, .55); }
+dialog h2 { font-weight: 400; margin-top: 0; }
+dialog label { display: flex; flex-direction: column; gap: .3rem; font-family: "Segoe UI", sans-serif; font-size: .9rem; }
+dialog dl { display: grid; grid-template-columns: auto 1fr; gap: .4rem 1rem; font-family: "Segoe UI", sans-serif; }
+dialog dt { color: var(--muted); }
+dialog dd { margin: 0; }
+.dialog-actions { display: flex; justify-content: flex-end; gap: .5rem; margin-top: 1.25rem; }
+
+@media (max-width: 760px) {
+  #loginScreen.active { grid-template-columns: 1fr; }
+  .login-art { padding: 2rem; min-height: 30vh; }
+  .panel { padding: 1rem; }
+  .tabs { padding: 0; overflow-x: auto; }
+}

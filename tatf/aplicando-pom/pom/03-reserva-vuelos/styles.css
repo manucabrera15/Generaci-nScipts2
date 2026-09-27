@@ -1,0 +1,99 @@
+:root {
+  --navy: #13294b;
+  --sky: #dce8f5;
+  --sun: #f2b705;
+  --white: #ffffff;
+  --gray: #6b7a90;
+  --red: #c62828;
+  font-family: "Gill Sans", "Gill Sans MT", "Segoe UI", sans-serif;
+  color: var(--navy);
+  background: var(--sky);
+}
+* { box-sizing: border-box; }
+body { margin: 0; }
+button { font: inherit; cursor: pointer; }
+input, select { font: inherit; padding: .55rem; border: 1px solid #b7c6d8; border-radius: 3px; width: 100%; background: #fff; color: var(--navy); }
+:focus-visible { outline: 3px solid var(--sun); outline-offset: 1px; }
+.muted { color: var(--gray); }
+
+.bar { background: var(--navy); color: var(--white); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+.logo { font-size: 1.3rem; letter-spacing: 2px; font-weight: 600; }
+.progress { display: flex; gap: 1.2rem; font-size: .9rem; }
+.p-step { opacity: .45; }
+.p-step.active { opacity: 1; border-bottom: 2px solid var(--sun); }
+.p-step.done { opacity: .8; }
+
+.page { display: none; max-width: 1100px; margin: 0 auto; padding: 2rem; }
+.page.active { display: block; }
+.page h1 { font-weight: 400; font-size: 2rem; margin: 0 0 1rem; }
+.page-head { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.page-head h1 { margin: 0; }
+.back { background: none; border: 1px solid var(--navy); color: var(--navy); padding: .4rem .8rem; border-radius: 3px; }
+
+.search-card { background: var(--white); padding: 1.5rem; border-radius: 4px; border-top: 6px solid var(--sun); }
+.trip-type { display: flex; gap: 1.5rem; margin-bottom: 1rem; }
+.trip-type input { width: auto; }
+.fields { display: grid; grid-template-columns: 1fr auto 1fr 1fr 1fr; gap: 1rem; align-items: end; }
+.fields label { display: flex; flex-direction: column; gap: .3rem; font-size: .9rem; }
+.swap { height: 2.5rem; width: 2.5rem; border: 1px solid #b7c6d8; background: #fff; border-radius: 50%; }
+.pax { display: flex; flex-direction: column; gap: .3rem; font-size: .9rem; }
+.pax div { display: flex; align-items: center; gap: .6rem; }
+.pax button { width: 2.3rem; height: 2.3rem; border: 1px solid #b7c6d8; background: #fff; border-radius: 3px; }
+.pax output { min-width: 1.5rem; text-align: center; font-size: 1.1rem; }
+.errors { color: var(--red); padding-left: 1.2rem; }
+.cta { background: var(--sun); color: var(--navy); border: 0; padding: .75rem 1.5rem; font-weight: 700; border-radius: 3px; }
+.cta:disabled { background: #e3d9b5; color: #8f95a3; cursor: not-allowed; }
+
+.results-layout, .seats-layout { display: grid; grid-template-columns: 220px 1fr; gap: 1.5rem; }
+.seats-layout { grid-template-columns: 1fr 260px; }
+.side { background: var(--white); padding: 1rem; border-radius: 4px; align-self: start; }
+.side h2 { font-size: 1rem; margin: 1rem 0 .5rem; }
+.side h2:first-child { margin-top: 0; }
+.side label { display: flex; gap: .5rem; align-items: center; margin-bottom: .3rem; }
+.side input[type="checkbox"] { width: auto; }
+.loading { padding: 3rem; text-align: center; background: var(--white); border-radius: 4px; }
+.flights { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: .75rem; }
+.flight { background: var(--white); border-radius: 4px; padding: 1rem 1.25rem; display: grid; grid-template-columns: 1fr 2fr 1fr auto; gap: 1rem; align-items: center; }
+.flight .times { font-size: 1.3rem; }
+.flight .route-line { display: flex; flex-direction: column; align-items: center; color: var(--gray); font-size: .85rem; }
+.flight .route-line::before { content: ""; width: 100%; border-top: 2px dotted var(--gray); margin-bottom: .3rem; }
+.flight .price { font-size: 1.4rem; font-weight: 700; text-align: right; }
+.flight .seats-left { color: var(--red); font-size: .8rem; }
+
+.plane { background: var(--white); border-radius: 40px 40px 8px 8px; padding: 2rem 1.5rem; }
+.legend { display: flex; gap: 1rem; flex-wrap: wrap; font-size: .85rem; margin-bottom: 1.5rem; }
+.swatch { display: inline-block; width: 1rem; height: 1rem; vertical-align: middle; border-radius: 3px; border: 1px solid #9fb1c7; background: #fff; }
+.swatch.taken { background: #c9d2dd; border-color: #c9d2dd; }
+.swatch.mine { background: var(--navy); border-color: var(--navy); }
+.swatch.exit { border: 2px solid var(--sun); }
+.seat-grid { display: grid; grid-template-columns: 2rem repeat(3, 2.2rem) 1.5rem repeat(3, 2.2rem); gap: .35rem; justify-content: center; }
+.row-label { display: grid; place-items: center; font-size: .8rem; color: var(--gray); }
+.aisle { width: 1.5rem; }
+.seat { width: 2.2rem; height: 2.2rem; border-radius: 6px 6px 3px 3px; border: 1px solid #9fb1c7; background: #fff; font-size: .7rem; padding: 0; }
+.seat.free:hover { background: var(--sky); }
+.seat.taken { background: #c9d2dd; border-color: #c9d2dd; cursor: not-allowed; }
+.seat.exit { border: 2px solid var(--sun); }
+.seat.mine { background: var(--navy); color: #fff; border-color: var(--navy); }
+.col-head { text-align: center; font-size: .8rem; color: var(--gray); }
+#selectedSeats { padding-left: 1.2rem; }
+
+.pax-card, .contact { background: var(--white); border: 0; border-radius: 4px; padding: 1.25rem; margin-bottom: 1rem; display: grid; grid-template-columns: 1fr 1fr; gap: .5rem 1rem; }
+.pax-card legend, .contact legend { font-weight: 700; padding: 0; float: left; grid-column: 1 / -1; margin-bottom: .5rem; }
+.pax-card label, .contact label { display: flex; flex-direction: column; gap: .3rem; font-size: .9rem; }
+.err { color: var(--red); font-size: .8rem; min-height: .9rem; }
+.invalid { border-color: var(--red); }
+.total-bar { display: flex; gap: 2rem; justify-content: flex-end; flex-wrap: wrap; margin: 1rem 0; font-size: 1.05rem; }
+
+.ticket { background: var(--white); max-width: 520px; margin: 2rem auto; padding: 2rem; border-radius: 6px; border-left: 10px dashed var(--sun); text-align: center; }
+.code { font-size: 2.5rem; letter-spacing: 6px; font-weight: 700; margin: .2rem 0 1.5rem; }
+.ticket dl { display: grid; grid-template-columns: auto 1fr; gap: .4rem 1rem; text-align: left; margin-bottom: 1.5rem; }
+.ticket dt { color: var(--gray); }
+.ticket dd { margin: 0; }
+
+@media (max-width: 900px) {
+  .fields { grid-template-columns: 1fr 1fr; }
+  .swap { justify-self: center; }
+  .results-layout, .seats-layout { grid-template-columns: 1fr; }
+  .flight { grid-template-columns: 1fr 1fr; }
+  .pax-card, .contact { grid-template-columns: 1fr; }
+}

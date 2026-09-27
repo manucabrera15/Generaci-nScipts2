@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Almacén del Puerto · Tienda</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar" data-testid="header">
+    <a href="#" class="brand" data-testid="brand-logo">Almacén del Puerto</a>
+    <button class="cart-btn" id="cartToggle" data-testid="cart-toggle" aria-label="Abrir carrito">
+      Carrito <span class="badge" id="cartCount" data-testid="cart-count">0</span>
+    </button>
+  </header>
+
+  <!-- ===================== VISTA: CATÁLOGO ===================== -->
+  <main id="view-catalog" class="view active" data-testid="catalog-page">
+    <section class="filters" data-testid="filters-panel">
+      <label>Buscar
+        <input type="search" id="searchInput" data-testid="search-input" placeholder="Yerba, dulce de leche…">
+      </label>
+      <label>Categoría
+        <select id="categorySelect" data-testid="category-select">
+          <option value="">Todas</option>
+          <option value="almacen">Almacén</option>
+          <option value="bebidas">Bebidas</option>
+          <option value="lacteos">Lácteos</option>
+          <option value="limpieza">Limpieza</option>
+        </select>
+      </label>
+      <label>Precio máximo: <output id="priceOutput" data-testid="price-output">1000</output>
+        <input type="range" id="priceRange" min="50" max="1000" step="10" value="1000" data-testid="price-range">
+      </label>
+      <label>Ordenar por
+        <select id="sortSelect" data-testid="sort-select">
+          <option value="relevance">Relevancia</option>
+          <option value="price-asc">Precio: menor a mayor</option>
+          <option value="price-desc">Precio: mayor a menor</option>
+          <option value="name">Nombre (A-Z)</option>
+        </select>
+      </label>
+      <label class="check">
+        <input type="checkbox" id="stockOnly" data-testid="stock-only-checkbox"> Solo con stock
+      </label>
+      <button class="link" id="clearFilters" data-testid="clear-filters">Limpiar filtros</button>
+    </section>
+
+    <p class="results-info" id="resultsInfo" data-testid="results-info"></p>
+    <div class="loader" id="loader" data-testid="catalog-loader">Cargando productos…</div>
+    <div class="grid" id="productGrid" data-testid="product-grid"></div>
+    <p class="empty hidden" id="emptyState" data-testid="empty-state">No hay productos con esos filtros. Probá quitar alguno.</p>
+  </main>
+
+  <!-- ===================== VISTA: CHECKOUT ===================== -->
+  <main id="view-checkout" class="view" data-testid="checkout-page">
+    <button class="link" id="backToCatalog" data-testid="back-to-catalog">Volver al catálogo</button>
+    <h1>Finalizar compra</h1>
+    <ol class="stepper" data-testid="checkout-stepper">
+      <li class="step current" data-step="1" data-testid="step-indicator-1">Datos</li>
+      <li class="step" data-step="2" data-testid="step-indicator-2">Envío</li>
+      <li class="step" data-step="3" data-testid="step-indicator-3">Pago</li>
+    </ol>
+
+    <div class="checkout-layout">
+      <form id="checkoutForm" novalidate data-testid="checkout-form">
+        <fieldset class="step-panel active" data-panel="1" data-testid="step-panel-1">
+          <legend>Tus datos</legend>
+          <label>Nombre completo <input id="fullName" name="fullName" data-testid="input-fullname"></label>
+          <span class="error" data-error-for="fullName" data-testid="error-fullname"></span>
+          <label>Email <input id="email" name="email" type="email" data-testid="input-email"></label>
+          <span class="error" data-error-for="email" data-testid="error-email"></span>
+          <label>Teléfono <input id="phone" name="phone" data-testid="input-phone" placeholder="09X XXX XXX"></label>
+          <span class="error" data-error-for="phone" data-testid="error-phone"></span>
+        </fieldset>
+
+        <fieldset class="step-panel" data-panel="2" data-testid="step-panel-2">
+          <legend>Envío</legend>
+          <div class="radio-group" data-testid="shipping-options">
+            <label class="radio"><input type="radio" name="shipping" value="retiro" data-testid="shipping-pickup" checked> Retiro en local (gratis)</label>
+            <label class="radio"><input type="radio" name="shipping" value="domicilio" data-testid="shipping-home"> Envío a domicilio ($150)</label>
+          </div>
+          <div id="addressBlock" class="hidden" data-testid="address-block">
+            <label>Dirección <input id="address" name="address" data-testid="input-address"></label>
+            <span class="error" data-error-for="address" data-testid="error-address"></span>
+            <label>Departamento
+              <select id="department" name="department" data-testid="select-department">
+                <option value="">Seleccioná…</option>
+                <option>Montevideo</option><option>Canelones</option><option>Maldonado</option><option>Colonia</option>
+              </select>
+            </label>
+            <span class="error" data-error-for="department" data-testid="error-department"></span>
+          </div>
+        </fieldset>
+
+        <fieldset class="step-panel" data-panel="3" data-testid="step-panel-3">
+          <legend>Pago</legend>
+          <label>Número de tarjeta <input id="cardNumber" name="cardNumber" maxlength="19" data-testid="input-card-number" placeholder="4111 1111 1111 1111"></label>
+          <span class="error" data-error-for="cardNumber" data-testid="error-card-number"></span>
+          <div class="row">
+            <label>Vencimiento <input id="cardExp" name="cardExp" placeholder="MM/AA" maxlength="5" data-testid="input-card-exp"></label>
+            <label>CVV <input id="cardCvv" name="cardCvv" maxlength="4" data-testid="input-card-cvv"></label>
+          </div>
+          <span class="error" data-error-for="cardExp" data-testid="error-card-exp"></span>
+          <span class="error" data-error-for="cardCvv" data-testid="error-card-cvv"></span>
+          <label class="check"><input type="checkbox" id="terms" name="terms" data-testid="terms-checkbox"> Acepto los términos y condiciones</label>
+          <span class="error" data-error-for="terms" data-testid="error-terms"></span>
+        </fieldset>
+
+        <div class="form-actions">
+          <button type="button" class="secondary hidden" id="prevStep" data-testid="prev-step">Anterior</button>
+          <button type="button" class="primary" id="nextStep" data-testid="next-step">Siguiente</button>
+          <button type="submit" class="primary hidden" id="placeOrder" data-testid="place-order">Confirmar compra</button>
+        </div>
+      </form>
+
+      <aside class="summary" data-testid="order-summary">
+        <h2>Resumen</h2>
+        <ul id="summaryItems" data-testid="summary-items"></ul>
+        <dl>
+          <dt>Subtotal</dt><dd id="sumSubtotal" data-testid="summary-subtotal"></dd>
+          <dt>Descuento</dt><dd id="sumDiscount" data-testid="summary-discount"></dd>
+          <dt>Envío</dt><dd id="sumShipping" data-testid="summary-shipping"></dd>
+          <dt class="total">Total</dt><dd class="total" id="sumTotal" data-testid="summary-total"></dd>
+        </dl>
+      </aside>
+    </div>
+  </main>
+
+  <!-- ===================== VISTA: CONFIRMACIÓN ===================== -->
+  <main id="view-confirmation" class="view" data-testid="confirmation-page">
+    <div class="confirm-box">
+      <h1>Compra confirmada</h1>
+      <p>Tu número de pedido es <strong id="orderNumber" data-testid="order-number"></strong>.</p>
+      <p>Te enviamos el detalle a <span id="confirmEmail" data-testid="confirmation-email"></span>.</p>
+      <button class="primary" id="newPurchase" data-testid="new-purchase">Hacer otra compra</button>
+    </div>
+  </main>
+
+  <!-- ===================== COMPONENTE: CARRITO LATERAL ===================== -->
+  <div class="overlay hidden" id="overlay" data-testid="overlay"></div>
+  <aside class="drawer" id="cartDrawer" aria-hidden="true" data-testid="cart-drawer">
+    <div class="drawer-head">
+      <h2>Tu carrito</h2>
+      <button class="icon" id="closeCart" data-testid="cart-close" aria-label="Cerrar carrito">✕</button>
+    </div>
+    <ul class="cart-items" id="cartItems" data-testid="cart-items"></ul>
+    <p class="empty" id="cartEmpty" data-testid="cart-empty">Tu carrito está vacío.</p>
+    <div class="coupon">
+      <input id="couponInput" placeholder="Código de descuento" data-testid="coupon-input">
+      <button class="secondary" id="applyCoupon" data-testid="coupon-apply">Aplicar</button>
+    </div>
+    <p class="coupon-msg" id="couponMsg" data-testid="coupon-message"></p>
+    <div class="drawer-foot">
+      <p>Total: <strong id="cartTotal" data-testid="cart-total">$0</strong></p>
+      <button class="primary" id="goCheckout" data-testid="go-checkout" disabled>Ir a pagar</button>
+    </div>
+  </aside>
+
+  <!-- ===================== COMPONENTE: MODAL DETALLE ===================== -->
+  <dialog id="productModal" data-testid="product-modal">
+    <button class="icon close" id="closeModal" data-testid="modal-close" aria-label="Cerrar">✕</button>
+    <h2 id="modalTitle" data-testid="modal-title"></h2>
+    <p id="modalDesc" data-testid="modal-description"></p>
+    <p class="price" id="modalPrice" data-testid="modal-price"></p>
+    <div class="qty" data-testid="modal-quantity">
+      <button class="icon" id="qtyMinus" data-testid="qty-minus">−</button>
+      <input id="qtyInput" type="number" min="1" value="1" data-testid="qty-input">
+      <button class="icon" id="qtyPlus" data-testid="qty-plus">+</button>
+    </div>
+    <button class="primary" id="modalAdd" data-testid="modal-add-to-cart">Agregar al carrito</button>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" data-testid="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

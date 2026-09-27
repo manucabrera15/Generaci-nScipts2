@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nómina · Gestión de personal</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar" data-testid="sidebar">
+      <p class="brand">Nómina</p>
+      <nav>
+        <a href="#" class="nav-item active" data-testid="nav-employees">Personal</a>
+        <a href="#" class="nav-item disabled" aria-disabled="true" data-testid="nav-payroll">Liquidaciones</a>
+        <a href="#" class="nav-item disabled" aria-disabled="true" data-testid="nav-reports">Reportes</a>
+      </nav>
+    </aside>
+
+    <main class="content" data-testid="employees-page">
+      <header class="page-top">
+        <div>
+          <h1>Personal</h1>
+          <p class="muted" id="totalsLine" data-testid="totals-line"></p>
+        </div>
+        <button class="btn primary" id="addBtn" data-testid="add-employee-btn">Agregar persona</button>
+      </header>
+
+      <section class="filters" data-testid="filters">
+        <input type="search" id="q" placeholder="Buscar por nombre, email o legajo" data-testid="search-input">
+        <select id="fDept" data-testid="filter-department"><option value="">Todas las áreas</option></select>
+        <select id="fStatus" data-testid="filter-status">
+          <option value="">Todos los estados</option>
+          <option value="activo">Activo</option>
+          <option value="licencia">De licencia</option>
+          <option value="inactivo">Inactivo</option>
+        </select>
+        <button class="btn ghost" id="clearBtn" data-testid="clear-filters">Limpiar</button>
+      </section>
+
+      <div class="bulk hidden" id="bulkBar" data-testid="bulk-bar">
+        <span id="bulkCount" data-testid="bulk-count"></span>
+        <select id="bulkAction" data-testid="bulk-action">
+          <option value="">Acción masiva…</option>
+          <option value="activo">Marcar como activos</option>
+          <option value="inactivo">Marcar como inactivos</option>
+          <option value="delete">Eliminar seleccionados</option>
+        </select>
+        <button class="btn" id="bulkApply" data-testid="bulk-apply">Aplicar</button>
+      </div>
+
+      <div class="table-wrap">
+        <table data-testid="employees-table">
+          <thead>
+            <tr>
+              <th><input type="checkbox" id="selectAll" aria-label="Seleccionar todos" data-testid="select-all"></th>
+              <th><button class="sort" data-sort="id" data-testid="sort-id">Legajo</button></th>
+              <th><button class="sort" data-sort="name" data-testid="sort-name">Nombre</button></th>
+              <th><button class="sort" data-sort="dept" data-testid="sort-dept">Área</button></th>
+              <th><button class="sort" data-sort="role" data-testid="sort-role">Cargo</button></th>
+              <th><button class="sort" data-sort="start" data-testid="sort-start">Ingreso</button></th>
+              <th class="num"><button class="sort" data-sort="salary" data-testid="sort-salary">Salario</button></th>
+              <th>Estado</th>
+              <th><span class="sr">Acciones</span></th>
+            </tr>
+          </thead>
+          <tbody id="tbody" data-testid="employees-rows"></tbody>
+        </table>
+      </div>
+      <p class="empty hidden" id="empty" data-testid="empty-state">Nadie coincide con esa búsqueda. Revisá los filtros o agregá una persona nueva.</p>
+
+      <footer class="pager" data-testid="pagination">
+        <label>Filas por página
+          <select id="pageSize" data-testid="page-size">
+            <option>5</option><option selected>10</option><option>25</option>
+          </select>
+        </label>
+        <span id="range" data-testid="page-range"></span>
+        <div class="pages" id="pages" data-testid="page-buttons"></div>
+      </footer>
+    </main>
+  </div>
+
+  <!-- Panel lateral de detalle -->
+  <aside class="detail" id="detail" aria-hidden="true" data-testid="detail-panel">
+    <button class="icon" id="closeDetail" data-testid="detail-close" aria-label="Cerrar">✕</button>
+    <div id="detailBody" data-testid="detail-body"></div>
+  </aside>
+
+  <!-- Modal con pestañas: alta / edición -->
+  <dialog id="empDialog" data-testid="employee-dialog">
+    <form id="empForm" novalidate data-testid="employee-form">
+      <h2 id="empTitle" data-testid="employee-dialog-title">Agregar persona</h2>
+      <div class="ftabs" role="tablist" data-testid="form-tabs">
+        <button type="button" role="tab" class="ftab active" data-ftab="personal" data-testid="form-tab-personal">Datos personales <span class="dot hidden" data-dot="personal" data-testid="tab-error-personal"></span></button>
+        <button type="button" role="tab" class="ftab" data-ftab="work" data-testid="form-tab-work">Datos laborales <span class="dot hidden" data-dot="work" data-testid="tab-error-work"></span></button>
+      </div>
+
+      <div class="fpanel active" data-fpanel="personal" data-testid="form-panel-personal">
+        <div class="grid2">
+          <label>Nombre <input name="first" data-testid="field-first-name"><small class="err" data-err="first" data-testid="error-first-name"></small></label>
+          <label>Apellido <input name="last" data-testid="field-last-name"><small class="err" data-err="last" data-testid="error-last-name"></small></label>
+          <label>Email <input name="email" type="email" data-testid="field-email"><small class="err" data-err="email" data-testid="error-email"></small></label>
+          <label>Teléfono <input name="phone" data-testid="field-phone"><small class="err" data-err="phone" data-testid="error-phone"></small></label>
+          <label>Fecha de nacimiento <input name="birth" type="date" data-testid="field-birthdate"><small class="err" data-err="birth" data-testid="error-birthdate"></small></label>
+        </div>
+      </div>
+
+      <div class="fpanel" data-fpanel="work" data-testid="form-panel-work">
+        <div class="grid2">
+          <label>Área <select name="dept" data-testid="field-department"></select><small class="err" data-err="dept" data-testid="error-department"></small></label>
+          <label>Cargo <select name="role" data-testid="field-role" disabled><option value="">Primero elegí un área</option></select><small class="err" data-err="role" data-testid="error-role"></small></label>
+          <label>Fecha de ingreso <input name="start" type="date" data-testid="field-start-date"><small class="err" data-err="start" data-testid="error-start-date"></small></label>
+          <label>Salario nominal ($) <input name="salary" inputmode="numeric" data-testid="field-salary"><small class="err" data-err="salary" data-testid="error-salary"></small></label>
+          <label>Estado
+            <select name="status" data-testid="field-status">
+              <option value="activo">Activo</option><option value="licencia">De licencia</option><option value="inactivo">Inactivo</option>
+            </select>
+          </label>
+          <fieldset class="modality" data-testid="field-modality">
+            <legend>Modalidad</legend>
+            <label><input type="radio" name="mode" value="presencial" checked data-testid="modality-presencial"> Presencial</label>
+            <label><input type="radio" name="mode" value="hibrida" data-testid="modality-hibrida"> Híbrida</label>
+            <label><input type="radio" name="mode" value="remota" data-testid="modality-remota"> Remota</label>
+          </fieldset>
+        </div>
+      </div>
+
+      <p class="form-alert hidden" id="formAlert" role="alert" data-testid="form-alert">Hay campos con errores. Revisá las pestañas marcadas.</p>
+      <div class="dialog-actions">
+        <button type="button" class="btn ghost" id="cancelEmp" data-testid="employee-cancel">Cancelar</button>
+        <button type="submit" class="btn primary" id="saveEmp" data-testid="employee-save">Guardar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Confirmación -->
+  <dialog id="confirmDlg" data-testid="confirm-dialog">
+    <p id="confirmMsg" data-testid="confirm-message"></p>
+    <label class="confirm-type">Escribí <b>ELIMINAR</b> para confirmar
+      <input id="confirmInput" data-testid="confirm-input">
+    </label>
+    <div class="dialog-actions">
+      <button class="btn ghost" id="confirmCancel" data-testid="confirm-cancel">Cancelar</button>
+      <button class="btn danger" id="confirmOk" data-testid="confirm-ok" disabled>Eliminar</button>
+    </div>
+  </dialog>
+
+  <div class="snackbar" id="snack" role="status" data-testid="snackbar"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
