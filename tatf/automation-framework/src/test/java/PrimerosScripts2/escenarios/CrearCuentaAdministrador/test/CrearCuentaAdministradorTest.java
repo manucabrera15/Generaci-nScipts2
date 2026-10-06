@@ -1,11 +1,13 @@
 package PrimerosScripts2.escenarios.CrearCuentaAdministrador.test;
 
-import PrimerosScripts2.escenarios.CrearCuentaAdministrador.data.CrearCuentaAdministradorData;
 import PrimerosScripts2.escenarios.CrearCuentaAdministrador.task.CrearCuentaAdministradorTask;
 import PrimerosScripts2.escenarios.base.BaseTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
+
 
 public class CrearCuentaAdministradorTest extends BaseTest {
 
@@ -17,30 +19,37 @@ public class CrearCuentaAdministradorTest extends BaseTest {
                 new CrearCuentaAdministradorTask(browser);
     }
 
-    @Test
+    @ParameterizedTest(name = "{arguments}")
+    @CsvFileSource(resources = "/CrearCuentaAdministrador.csv",
+    useHeadersInDisplayName = true)
+
     @DisplayName("Crear cuenta administrador correctamente")
-    public void crearCuentaAdministradorTest() {
+    public void crearCuentaAdministradorTest(String ClaveAcceso, String Nombre,
+                                             String Apellido, String Email, String Contrasena,
+                                             String RepetirContrasena, String Pais,
+                                             String NombreAutenticado) {
 
         this.crearCuentaAdministrador.accederAlSistema(
                 url,
-                CrearCuentaAdministradorData.ClaveAcceso);
+                ClaveAcceso);
 
         this.crearCuentaAdministrador.registrarAdministrador(
-                CrearCuentaAdministradorData.Nombre,
-                CrearCuentaAdministradorData.Apellido,
-                CrearCuentaAdministradorData.Email,
-                CrearCuentaAdministradorData.Contrasena,
-                CrearCuentaAdministradorData.RepetirContrasena,
-                CrearCuentaAdministradorData.Pais);
+                Nombre,
+                Apellido,
+                Email,
+                Contrasena,
+                RepetirContrasena,
+                Pais);
 
         this.crearCuentaAdministrador.iniciarSesion(
-                CrearCuentaAdministradorData.Email,
-                CrearCuentaAdministradorData.Contrasena
+                Email,
+                Contrasena
         );
 
         this.crearCuentaAdministrador.IngresarVerUsuarios();
 
         this.crearCuentaAdministrador.verificarUsuarioEnLista(
-                CrearCuentaAdministradorData.NombreAutenticado);
+                NombreAutenticado);
     }
 }
+

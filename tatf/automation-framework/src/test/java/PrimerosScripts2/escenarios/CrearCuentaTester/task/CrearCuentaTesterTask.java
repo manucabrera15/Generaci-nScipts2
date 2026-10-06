@@ -2,7 +2,6 @@ package PrimerosScripts2.escenarios.CrearCuentaTester.task;
 
 import PrimerosScripts2.escenarios.CrearCuentaTester.pom.CrearCuentaTesterPO;
 import PrimerosScripts2.escenarios.FuncionesAuxiliares.AccesoAlSitioWeb.task.AccesoAlSitioWebTask;
-import PrimerosScripts2.escenarios.FuncionesAuxiliares.CrearTester.task.CrearTesterTask;
 import PrimerosScripts2.escenarios.FuncionesAuxiliares.InicioDeSesion.task.InicioDeSesionTask;
 import PrimerosScripts2.escenarios.FuncionesAuxiliares.Registro.task.RegistroTask;
 import com.tatf.core.browser.BrowserImpl;
@@ -15,7 +14,6 @@ public class CrearCuentaTesterTask {
     private final AccesoAlSitioWebTask accesoAlSitioWeb;
     private final RegistroTask registro;
     private final InicioDeSesionTask inicioDeSesion;
-    private final CrearTesterTask crearTester;
     private CrearCuentaTesterPO crearCuentaTesterPO;
 
     public CrearCuentaTesterTask(IBrowser browser) {
@@ -25,7 +23,6 @@ public class CrearCuentaTesterTask {
         this.accesoAlSitioWeb = new AccesoAlSitioWebTask(browser);
         this.registro = new RegistroTask(browser);
         this.inicioDeSesion = new InicioDeSesionTask(browser);
-        this.crearTester = new CrearTesterTask(browser);
         this.crearCuentaTesterPO = new CrearCuentaTesterPO(this.browser);
     }
 
@@ -58,17 +55,25 @@ public class CrearCuentaTesterTask {
                             String contrasenaPorDefecto,
                             String tester) {
 
-        this.crearTester.crearTester(nombre, apellido, email, pais,
-                contrasenaPorDefecto,
-                tester
-        );
+        this.crearCuentaTesterPO.ClickCrearUsuario();
+        this.crearCuentaTesterPO.IngresarNombre(nombre);
+        this.crearCuentaTesterPO.IngresarApellido(apellido);
+        this.crearCuentaTesterPO.IngresarEmail(email);
+        this.crearCuentaTesterPO.IngresarPais(pais);
+        this.crearCuentaTesterPO.IngresarContrasenaPorDefecto(contrasenaPorDefecto);
+        this.crearCuentaTesterPO.SeleccionarTester(tester);
+
+        this.crearCuentaTesterPO.ClickBotonCrear();
+
+        this.crearCuentaTesterPO.EsperarMensajeConfirmacion();
+        this.crearCuentaTesterPO.ClickConfirmar();
     }
 
     public void verificarDatosTester(String nombre, String apellido,
                                      String email, String pais,
                                      String tipoTester) {
 
-        this.crearTester.verificarTesterCreado();
+        this.crearCuentaTesterPO.EntrarVerUsuarios();
 
         IVerify.create().verifyTrue(
                 this.crearCuentaTesterPO.DatosTester(

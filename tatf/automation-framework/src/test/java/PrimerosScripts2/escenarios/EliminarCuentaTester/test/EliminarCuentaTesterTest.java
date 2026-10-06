@@ -1,66 +1,82 @@
 package PrimerosScripts2.escenarios.EliminarCuentaTester.test;
 
-import PrimerosScripts2.escenarios.EliminarCuentaTester.data.EliminarCuentaTesterData;
+
 import PrimerosScripts2.escenarios.EliminarCuentaTester.task.EliminarCuentaTesterTask;
 import PrimerosScripts2.escenarios.base.BaseTest;
 import com.tatf.core.browser.IBrowser;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
 
 public class EliminarCuentaTesterTest extends BaseTest{
 
-    @Test
+    @ParameterizedTest (name = "{arguments}")
+    @CsvFileSource(resources = "/EliminarCuentaTester.csv",
+            useHeadersInDisplayName = true)
     @DisplayName("Eliminar cuenta Tester correctamente")
-    public void eliminarTesterTest() {
+    public void eliminarTesterTest(String ClaveAcceso, String Nombre,
+                                   String Apellido, String Email, String Contrasena,
+                                   String RepetirContrasena, String Pais,
+                                   String NombreAutenticado, String NombreTester,
+                                   String ApellidoTester, String EmailTester,
+                                   String PaisTester, String ContrasenaPorDefecto,
+                                   String TipoTester) {
 
         EliminarCuentaTesterTask eliminarTester =
                 new EliminarCuentaTesterTask(browser);
 
         eliminarTester.accederAlSistema(
                 url,
-                EliminarCuentaTesterData.ClaveAcceso
+                ClaveAcceso
         );
 
 
         eliminarTester.registrarAdministrador(
-                EliminarCuentaTesterData.Nombre,
-                EliminarCuentaTesterData.Apellido,
-                EliminarCuentaTesterData.Email,
-                EliminarCuentaTesterData.Contrasena,
-                EliminarCuentaTesterData.RepetirContrasena,
-                EliminarCuentaTesterData.Pais
+                Nombre,
+                Apellido,
+                Email,
+                Contrasena,
+                RepetirContrasena,
+                Pais
         );
 
         eliminarTester.iniciarSesion(
-                EliminarCuentaTesterData.Email,
-                EliminarCuentaTesterData.Contrasena
+                Email,
+                Contrasena
         );
 
         eliminarTester.verificarUsuarioAccedido(
-                EliminarCuentaTesterData.NombreAutenticado
+                NombreAutenticado
         );
 
 
         eliminarTester.crearTester(
-                EliminarCuentaTesterData.NombreTester,
-                EliminarCuentaTesterData.ApellidoTester,
-                EliminarCuentaTesterData.EmailTester,
-                EliminarCuentaTesterData.PaisTester,
-                EliminarCuentaTesterData.ContrasenaPorDefecto,
-                EliminarCuentaTesterData.TipoTester
+                NombreTester,
+                ApellidoTester,
+                EmailTester,
+                PaisTester,
+                ContrasenaPorDefecto,
+                TipoTester
         );
 
         eliminarTester.verificarDatosTester(
-                EliminarCuentaTesterData.NombreTester,
-                EliminarCuentaTesterData.ApellidoTester,
-                EliminarCuentaTesterData.EmailTester,
-                EliminarCuentaTesterData.PaisTester,
-                EliminarCuentaTesterData.TipoTester
+                NombreTester,
+                ApellidoTester,
+                EmailTester,
+                PaisTester,
+                TipoTester
         );
 
-        eliminarTester.eliminarTester();
+        eliminarTester.eliminarTester(
+                EmailTester);
 
-        eliminarTester.verificarTesterEliminado();
+        eliminarTester.verificarTesterEliminado(
+                NombreTester,
+                ApellidoTester,
+                EmailTester,
+                PaisTester,
+                TipoTester);
     }
 }
 

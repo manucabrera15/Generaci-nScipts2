@@ -1,9 +1,8 @@
 package PrimerosScripts2.escenarios.EliminarCuentaTester.task;
 
-import PrimerosScripts2.escenarios.CrearCuentaTester.pom.CrearCuentaTesterPO;
+import PrimerosScripts2.escenarios.CrearCuentaTester.task.CrearCuentaTesterTask;
 import PrimerosScripts2.escenarios.EliminarCuentaTester.pom.EliminarCuentaTesterPO;
 import PrimerosScripts2.escenarios.FuncionesAuxiliares.AccesoAlSitioWeb.task.AccesoAlSitioWebTask;
-import PrimerosScripts2.escenarios.FuncionesAuxiliares.CrearTester.task.CrearTesterTask;
 import PrimerosScripts2.escenarios.FuncionesAuxiliares.InicioDeSesion.task.InicioDeSesionTask;
 import PrimerosScripts2.escenarios.FuncionesAuxiliares.Registro.task.RegistroTask;
 import com.tatf.core.browser.IBrowser;
@@ -16,8 +15,7 @@ public class EliminarCuentaTesterTask {
     private final AccesoAlSitioWebTask accesoAlSitioWeb;
     private final RegistroTask registro;
     private final InicioDeSesionTask inicioDeSesion;
-    private final CrearTesterTask crearTester;
-    private CrearCuentaTesterPO crearCuentaTesterPO;
+    private final CrearCuentaTesterTask crearCuentaTesterTask;
 
 
     public EliminarCuentaTesterTask(IBrowser browser) {
@@ -26,8 +24,7 @@ public class EliminarCuentaTesterTask {
         this.accesoAlSitioWeb = new AccesoAlSitioWebTask(browser);
         this.registro = new RegistroTask(browser);
         this.inicioDeSesion = new InicioDeSesionTask(browser);
-        this.crearTester = new CrearTesterTask(browser);
-        this.crearCuentaTesterPO = new CrearCuentaTesterPO(this.browser);
+        this.crearCuentaTesterTask = new CrearCuentaTesterTask(this.browser);
     }
 
     public void accederAlSistema(String url, String claveAcceso) {
@@ -59,7 +56,7 @@ public class EliminarCuentaTesterTask {
                             String contrasenaPorDefecto,
                             String tester) {
 
-        this.crearTester.crearTester(nombre, apellido, email, pais,
+        this.crearCuentaTesterTask.crearTester(nombre, apellido, email, pais,
                 contrasenaPorDefecto,
                 tester
         );
@@ -69,23 +66,19 @@ public class EliminarCuentaTesterTask {
                                      String email, String pais,
                                      String tipoTester) {
 
-        this.crearTester.verificarTesterCreado();
 
-        IVerify.create().verifyTrue(
-                this.crearCuentaTesterPO.DatosTester(
-                        nombre,
-                        apellido,
-                        email,
-                        pais,
-                        tipoTester
-                ),
-                "Los datos del tester no coinciden con los datos ingresados."
+        this.crearCuentaTesterTask.verificarDatosTester(
+                nombre,
+                apellido,
+                email,
+                pais,
+                tipoTester
         );
     }
 
-    public void eliminarTester() {
+    public void eliminarTester(String email) {
 
-        this.eliminarTester.clickEliminarTester();
+        this.eliminarTester.clickEliminarTester(email);
 
         this.eliminarTester.esperarConfirmacion();
         this.eliminarTester.clickSi();
@@ -94,10 +87,11 @@ public class EliminarCuentaTesterTask {
         this.eliminarTester.clickSi();
     }
 
-    public void verificarTesterEliminado() {
+    public void verificarTesterEliminado(String nombre, String apellido, String email,
+                                         String pais, String tipoTester) {
 
         IVerify.create().verifyTrue(
-                this.eliminarTester.testerEliminado(),
+                this.eliminarTester.testerEliminado(nombre, apellido, email, pais, tipoTester),
                 "Se verifica que el tester haya sido eliminado"
         );
     }

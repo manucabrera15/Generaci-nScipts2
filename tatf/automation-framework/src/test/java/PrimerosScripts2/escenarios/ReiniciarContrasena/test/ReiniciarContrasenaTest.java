@@ -1,11 +1,12 @@
 package PrimerosScripts2.escenarios.ReiniciarContrasena.test;
 
-import PrimerosScripts2.escenarios.ReiniciarContrasena.data.ReiniciarContrasenaData;
 import PrimerosScripts2.escenarios.ReiniciarContrasena.task.ReiniciarContrasenaTask;
 import PrimerosScripts2.escenarios.base.BaseTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
 
 public class ReiniciarContrasenaTest extends BaseTest {
 
@@ -16,35 +17,41 @@ public class ReiniciarContrasenaTest extends BaseTest {
         this.reiniciarContrasena = new ReiniciarContrasenaTask(browser);
     }
 
-    @Test
+    @ParameterizedTest(name = "{arguments}")
+    @CsvFileSource(resources = "/ReiniciarContrasena.csv",
+            useHeadersInDisplayName = true)
     @DisplayName("Reiniciar contraseña de nuestro usuario creado anteriormente")
-    public void reiniciarContrasenaTest() {
+    public void reiniciarContrasenaTest(String ClaveAcceso, String Nombre,
+                                        String Apellido, String Email, String Contrasena,
+                                        String RepetirContrasena, String Pais,
+                                        String NombreAutenticado, String Contrasena2,
+                                        String RepetirContrasena2) {
 
         this.reiniciarContrasena.accederAlSistema(
                 url,
-                ReiniciarContrasenaData.ClaveAcceso);
+                ClaveAcceso);
 
         this.reiniciarContrasena.registrarAdministrador(
-                ReiniciarContrasenaData.Nombre,
-                ReiniciarContrasenaData.Apellido,
-                ReiniciarContrasenaData.Email,
-                ReiniciarContrasenaData.Contrasena,
-                ReiniciarContrasenaData.RepetirContrasena,
-                ReiniciarContrasenaData.Pais
+                Nombre,
+                Apellido,
+                Email,
+                Contrasena,
+                RepetirContrasena,
+                Pais
         );
 
         this.reiniciarContrasena.reiniciarContrasena(
-                ReiniciarContrasenaData.Email,
-                ReiniciarContrasenaData.Contrasena2,
-                ReiniciarContrasenaData.RepetirContrasena2
+                Email,
+                Contrasena2,
+                RepetirContrasena2
         );
 
         this.reiniciarContrasena.iniciarSesion(
-                ReiniciarContrasenaData.Email,
-                ReiniciarContrasenaData.Contrasena2
+                Email,
+                Contrasena2
         );
 
         this.reiniciarContrasena.verificarUsuarioAccedido(
-                ReiniciarContrasenaData.NombreAutenticado);
+                NombreAutenticado);
     }
 }

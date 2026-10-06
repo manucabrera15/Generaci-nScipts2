@@ -10,6 +10,7 @@ public class AccesoAlSitioWebPO {
     private final String TituloPagina = "//div[@class='sidebar-brand-text mx-3']";
 
     public AccesoAlSitioWebPO(IBrowser browser) {
+
         this.browser = browser;
     }
 
@@ -28,4 +29,5 @@ public class AccesoAlSitioWebPO {
     public boolean sistemaAccedido() {
         return !this.browser.find().xpathList(TituloPagina).isEmpty();
     }
-    }
+
+}

@@ -42,6 +42,12 @@ public class ReiniciarContrasenaPO {
     public void ClickConfirmar() {
         this.browser.find().css(BotonConfirmar).click();
     }
+
+    public boolean VerificarNombre(String nombreUsuario){
+
+        return !this.browser.find().xpathList("//a[contains(normalize-space(), '" +
+                        nombreUsuario + "')]").isEmpty();
+    }
 }
 
 

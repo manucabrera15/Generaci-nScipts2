@@ -46,9 +46,7 @@ public class ReiniciarContrasenaTask {
 
     public void verificarUsuarioAccedido(String nombreUsuario) {
         IVerify.create().verifyTrue(
-                !this.browser.find()
-                        .xpathList("//a[contains(normalize-space(), '" + nombreUsuario + "')]")
-                        .isEmpty(),
+                this.reiniciarContrasena.VerificarNombre(nombreUsuario),
                 "No se muestra el nombre del usuario accedido."
         );
     }

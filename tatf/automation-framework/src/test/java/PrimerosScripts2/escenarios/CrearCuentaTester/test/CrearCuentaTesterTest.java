@@ -1,58 +1,67 @@
 package PrimerosScripts2.escenarios.CrearCuentaTester.test;
 
-import PrimerosScripts2.escenarios.CrearCuentaTester.data.CrearCuentaTesterData;
 import PrimerosScripts2.escenarios.CrearCuentaTester.task.CrearCuentaTesterTask;
 import PrimerosScripts2.escenarios.base.BaseTest;
 import com.tatf.core.browser.IBrowser;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
 
 public class CrearCuentaTesterTest extends BaseTest {
 
-    @Test
+    @ParameterizedTest(name = "{arguments}")
+    @CsvFileSource(resources = "/CrearCuentaTester.csv",
+            useHeadersInDisplayName = true)
     @DisplayName("Crear cuenta Tester correctamente")
-    public void crearCuentaTesterTest() {
+    public void crearCuentaTesterTest(String ClaveAcceso, String Nombre,
+                                      String Apellido, String Email, String Contrasena,
+                                      String RepetirContrasena, String Pais,
+                                      String NombreAutenticado, String NombreTester,
+                                      String ApellidoTester, String EmailTester,
+                                      String PaisTester, String ContrasenaPorDefecto,
+                                      String TipoTester) {
 
         CrearCuentaTesterTask crearCuentaTester =
                 new CrearCuentaTesterTask(browser);
 
         crearCuentaTester.accederAlSistema(url,
-                CrearCuentaTesterData.ClaveAcceso
+                ClaveAcceso
         );
 
         crearCuentaTester.registrarAdministrador(
-                CrearCuentaTesterData.Nombre,
-                CrearCuentaTesterData.Apellido,
-                CrearCuentaTesterData.Email,
-                CrearCuentaTesterData.Contrasena,
-                CrearCuentaTesterData.RepetirContrasena,
-                CrearCuentaTesterData.Pais
+                Nombre,
+                Apellido,
+                Email,
+                Contrasena,
+                RepetirContrasena,
+                Pais
         );
 
         crearCuentaTester.iniciarSesion(
-                CrearCuentaTesterData.Email,
-                CrearCuentaTesterData.Contrasena
+                Email,
+                Contrasena
         );
 
         crearCuentaTester.verificarUsuarioAccedido(
-                CrearCuentaTesterData.NombreAutenticado
+                NombreAutenticado
         );
 
         crearCuentaTester.crearTester(
-                CrearCuentaTesterData.NombreTester,
-                CrearCuentaTesterData.ApellidoTester,
-                CrearCuentaTesterData.EmailTester,
-                CrearCuentaTesterData.PaisTester,
-                CrearCuentaTesterData.ContrasenaPorDefecto,
-                CrearCuentaTesterData.TipoTester
+                NombreTester,
+                ApellidoTester,
+                EmailTester,
+                PaisTester,
+                ContrasenaPorDefecto,
+                TipoTester
         );
 
         crearCuentaTester.verificarDatosTester(
-                CrearCuentaTesterData.NombreTester,
-                CrearCuentaTesterData.ApellidoTester,
-                CrearCuentaTesterData.EmailTester,
-                CrearCuentaTesterData.PaisTester,
-                CrearCuentaTesterData.TipoTester
+                NombreTester,
+                ApellidoTester,
+                EmailTester,
+                PaisTester,
+                TipoTester
         );
     }
 }
