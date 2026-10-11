@@ -4,6 +4,7 @@ import PrimerosScripts2.escenarios.ReiniciarContrasena.task.ReiniciarContrasenaT
 import PrimerosScripts2.escenarios.base.BaseTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
@@ -21,6 +22,7 @@ public class ReiniciarContrasenaTest extends BaseTest {
     @CsvFileSource(resources = "/ReiniciarContrasena.csv",
             useHeadersInDisplayName = true)
     @DisplayName("Reiniciar contraseña de nuestro usuario creado anteriormente")
+    @Tag("Reinicio")
     public void reiniciarContrasenaTest(String ClaveAcceso, String Nombre,
                                         String Apellido, String Email, String Contrasena,
                                         String RepetirContrasena, String Pais,
